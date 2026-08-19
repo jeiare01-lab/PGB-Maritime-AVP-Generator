@@ -22,6 +22,7 @@
     .header {
       border-bottom: 1px solid #1e293b;
       padding: 20px 32px;
+      background: #0a0f1a;
     }
 
     .header h1 {
@@ -34,6 +35,49 @@
       margin: 0;
       font-size: 14px;
       color: #94a3b8;
+    }
+
+    .api-setup {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 16px 32px;
+    }
+
+    .api-setup-content {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .api-setup input {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .api-setup-label {
+      font-size: 12px;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    .api-status {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #7c2d12;
+      color: #fecaca;
+    }
+
+    .api-status.ready {
+      background: #064e3b;
+      color: #a7f3d0;
     }
 
     .container {
@@ -90,12 +134,16 @@
       border-radius: 4px;
       font-size: 12px;
       margin-bottom: 8px;
-      font-family: monospace;
     }
 
     textarea {
       min-height: 50px;
       resize: vertical;
+      font-family: monospace;
+    }
+
+    input[type="text"], input[type="number"] {
+      font-family: monospace;
     }
 
     input[type="color"] {
@@ -159,6 +207,16 @@
       margin-top: 12px;
     }
 
+    .success-message {
+      background: #064e3b;
+      border: 1px solid #10b981;
+      color: #a7f3d0;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
     .output-variant {
       display: flex;
       justify-content: space-between;
@@ -207,16 +265,6 @@
       display: none;
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .spinner {
-      display: inline-block;
-      animation: spin 1s linear infinite;
-    }
-
     .left-panel {
       display: flex;
       flex-direction: column;
@@ -232,6 +280,9 @@
       flex-direction: column;
       gap: 12px;
       margin-bottom: 16px;
+      max-height: 600px;
+      overflow-y: auto;
+      padding-right: 8px;
     }
 
     .settings-group {
@@ -270,6 +321,13 @@
       .container {
         grid-template-columns: 1fr;
       }
+      .api-setup-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .api-setup input {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -279,8 +337,15 @@
     <p>Transform storyline into Motion videos</p>
   </div>
 
+  <div class="api-setup">
+    <div class="api-setup-content">
+      <label class="api-setup-label">Anthropic API Key:</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." />
+      <span id="apiStatus" class="api-status">Not configured</span>
+    </div>
+  </div>
+
   <div class="container">
-    <!-- Left Panel -->
     <div class="left-panel">
       <h2 class="section-title">Scene Composition</h2>
       <div id="scenes-container" class="scenes-container"></div>
@@ -302,7 +367,6 @@
       </div>
     </div>
 
-    <!-- Right Panel -->
     <div class="right-panel">
       <h2 class="section-title">Generation</h2>
 
@@ -327,6 +391,7 @@
 
         <button class="button" id="generateBtn" onclick="generateVideo()">Generate Videos</button>
         <div id="errorMsg" class="error-message hidden"></div>
+        <div id="successMsg" class="success-message hidden"></div>
       </div>
 
       <div id="outputSection" class="output-section hidden">
@@ -339,12 +404,12 @@
   <script>
     const scenes = [
       { id: 1, title: 'Problem', duration: 60, narration: 'Philippine shipping is broken. Govt ports are congested, expensive, and slow.', visuals: 'Problem montage: crowded port, waiting ships, cost charts' },
-      { id: 2, title: 'Cost Impact', duration: 30, narration: '30-40% more expensive than global standards. ₱135-260B annual inefficiency.', visuals: 'Cost comparison animation, market size metric' },
+      { id: 2, title: 'Cost Impact', duration: 30, narration: '30-40% more expensive than global standards. 135-260B annual inefficiency.', visuals: 'Cost comparison animation, market size metric' },
       { id: 3, title: 'Opportunity', duration: 30, narration: 'What if logistics could work differently?', visuals: 'Question mark transition, network reveal teaser' },
-      { id: 4, title: 'Network Solution', duration: 45, narration: 'CSP deep-water hub. Starlite and ALD operator networks. 120M consumer reach in 2 hours.', visuals: 'Map animation, route highlighting, Starlite+ALD routes' },
-      { id: 5, title: 'Live Proof', duration: 45, narration: 'Real-time dashboard. Vessel tracking. Hub operations. Actual shipments moving now.', visuals: 'Dashboard embed (live or mock), vessel positions, metrics' },
-      { id: 6, title: 'Structural Advantage', duration: 45, narration: '70k-ton capacity. 4.7x more cargo per voyage. 7.5x faster routing. 29% cheaper per ton.', visuals: 'Comparison cards, capacity visualization, cost advantage breakdown' },
-      { id: 7, title: 'Shipper Wins', duration: 30, narration: 'Lazada. Unilever. ADM. Pepsi. All saving millions. Repeat rates 95%+.', visuals: 'Shipper logos, savings metrics, testimonial quotes' },
+      { id: 4, title: 'Network Solution', duration: 45, narration: 'CSP deep-water hub. Starlite and ALD operator networks. 120M consumer reach in 2 hours.', visuals: 'Map animation, route highlighting, Starlite and ALD routes' },
+      { id: 5, title: 'Live Proof', duration: 45, narration: 'Real-time dashboard. Vessel tracking. Hub operations. Actual shipments moving now.', visuals: 'Dashboard embed, vessel positions, metrics' },
+      { id: 6, title: 'Structural Advantage', duration: 45, narration: '70k-ton capacity. 4.7x more cargo per voyage. 7.5x faster routing. 29% cheaper per ton.', visuals: 'Comparison cards, capacity visualization, cost breakdown' },
+      { id: 7, title: 'Shipper Wins', duration: 30, narration: 'Lazada. Unilever. ADM. Pepsi. All saving millions. Repeat rates 95%+.', visuals: 'Shipper logos, savings metrics, testimonials' },
       { id: 8, title: 'Call to Action', duration: 30, narration: 'Join the network. Move cargo smarter. Contact us.', visuals: 'Brand moment, contact info, link' }
     ];
 
@@ -374,40 +439,64 @@
       document.getElementById('accentColorText').value = document.getElementById('accentColor').value;
     }
 
+    function updateApiStatus() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const status = document.getElementById('apiStatus');
+      if (apiKey.length > 10) {
+        status.textContent = 'Ready';
+        status.classList.add('ready');
+      } else {
+        status.textContent = 'Not configured';
+        status.classList.remove('ready');
+      }
+    }
+
+    document.getElementById('apiKey').addEventListener('change', updateApiStatus);
+    document.getElementById('apiKey').addEventListener('input', updateApiStatus);
     document.getElementById('primaryColor').addEventListener('change', updateColorSync);
     document.getElementById('accentColor').addEventListener('change', updateColorSync);
-
     document.getElementById('primaryColorText').addEventListener('change', (e) => {
       document.getElementById('primaryColor').value = e.target.value;
     });
-
     document.getElementById('accentColorText').addEventListener('change', (e) => {
       document.getElementById('accentColor').value = e.target.value;
     });
-
     document.getElementById('voiceSpeed').addEventListener('change', (e) => {
       document.getElementById('speedValue').textContent = parseFloat(e.target.value).toFixed(1);
     });
 
     async function generateVideo() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      if (!apiKey || apiKey.length < 10) {
+        document.getElementById('errorMsg').textContent = 'Please enter your Anthropic API key first';
+        document.getElementById('errorMsg').classList.remove('hidden');
+        return;
+      }
+
       if (generationInProgress) return;
       generationInProgress = true;
 
       const btn = document.getElementById('generateBtn');
       const errorMsg = document.getElementById('errorMsg');
-      const outputSection = document.getElementById('outputSection');
+      const successMsg = document.getElementById('successMsg');
 
-      btn.textContent = '⏳ Generating...';
+      btn.textContent = 'Generating...';
       btn.disabled = true;
       errorMsg.classList.add('hidden');
+      successMsg.classList.add('hidden');
 
       try {
-        const videoScript = scenes.map(s => `[${s.title}] ${document.getElementById(`narration-${s.id}`).value}`).join('\n');
+        const videoScript = scenes.map(s => {
+          const narration = document.getElementById('narration-' + s.id).value;
+          return '[' + s.title + '] ' + narration;
+        }).join('\n');
         
         const voiceType = document.getElementById('voiceType').value;
         const voiceSpeed = document.getElementById('voiceSpeed').value;
         const primaryColor = document.getElementById('primaryColor').value;
         const accentColor = document.getElementById('accentColor').value;
+
+        const prompt = 'You are a video production orchestrator. Generate JSON for 4 video variants from this script:\n\n' + videoScript + '\n\nRequirements: voice=' + voiceType + ', speed=' + voiceSpeed + 'x, primary=' + primaryColor + ', accent=' + accentColor + '\n\nReturn only valid JSON with keys: full, teaser60, email90, social30 (each with duration).';
 
         const payload = {
           model: "claude-sonnet-4-6",
@@ -415,25 +504,7 @@
           messages: [
             {
               role: "user",
-              content: `You are a video production orchestrator. Given this script, generate JSON for 4 video variants.
-
-SCRIPT:
-${videoScript}
-
-REQUIREMENTS:
-- Generate 4 variants: full (3:45), teaser (60s), email (90s), social (30s)
-- Voice: ${voiceType}, speed: ${voiceSpeed}x
-- Colors: Primary ${primaryColor}, Accent ${accentColor}
-
-Return ONLY JSON (no markdown):
-{
-  "videos": {
-    "full": { "duration": 225 },
-    "teaser60": { "duration": 60 },
-    "email90": { "duration": 90 },
-    "social30": { "duration": 30 }
-  }
-}`
+              content: prompt
             }
           ]
         };
@@ -442,13 +513,14 @@ Return ONLY JSON (no markdown):
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": ""
+            "x-api-key": apiKey
           },
           body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
+          const error = await response.json();
+          throw new Error(error.error?.message || 'API error: ' + response.status);
         }
 
         const data = await response.json();
@@ -458,17 +530,19 @@ Return ONLY JSON (no markdown):
 
         outputLinks = {};
         for (const [key] of Object.entries(videoConfig.videos)) {
-          outputLinks[key] = `https://motion.dev/videos/${key}-${Date.now()}.mp4`;
+          outputLinks[key] = 'https://motion.dev/videos/' + key + '-' + Date.now() + '.mp4';
         }
 
         showOutputVariants();
-        btn.textContent = '✓ Generated!';
+        btn.textContent = 'Generated!';
         btn.classList.add('success');
+        successMsg.textContent = 'Videos generated successfully!';
+        successMsg.classList.remove('hidden');
 
       } catch (err) {
-        errorMsg.textContent = err.message || 'Video generation failed';
+        errorMsg.textContent = 'Error: ' + (err.message || 'Generation failed');
         errorMsg.classList.remove('hidden');
-        btn.textContent = '⚠ Failed';
+        btn.textContent = 'Failed';
         btn.classList.add('error');
       } finally {
         btn.disabled = false;
@@ -485,25 +559,17 @@ Return ONLY JSON (no markdown):
       ];
 
       const container = document.getElementById('outputContainer');
-      container.innerHTML = variants.map(v => `
-        <div class="output-variant">
-          <div class="variant-info">
-            <h4>${v.label}</h4>
-            <p>${v.desc}</p>
-          </div>
-          <div class="variant-buttons">
-            <button class="small-button" onclick="copyLink('${v.key}')">Copy</button>
-            <a href="${outputLinks[v.key]}" target="_blank" class="small-button download">Download</a>
-          </div>
-        </div>
-      `).join('');
+      container.innerHTML = variants.map(v => {
+        return '<div class="output-variant"><div class="variant-info"><h4>' + v.label + '</h4><p>' + v.desc + '</p></div><div class="variant-buttons"><button class="small-button" onclick="copyLink(\'' + v.key + '\')">Copy</button><a href="' + outputLinks[v.key] + '" target="_blank" class="small-button download">Download</a></div></div>';
+      }).join('');
 
       document.getElementById('outputSection').classList.remove('hidden');
     }
 
     function copyLink(key) {
-      navigator.clipboard.writeText(outputLinks[key]);
-      alert('Copied!');
+      navigator.clipboard.writeText(outputLinks[key]).then(() => {
+        alert('Link copied!');
+      });
     }
 
     renderScenes();
