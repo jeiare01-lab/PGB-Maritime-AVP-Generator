@@ -6,329 +6,31 @@
   <title>PGB Maritime AVP Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      min-height: 100vh;
-    }
-
-    .header {
-      border-bottom: 1px solid #1e293b;
-      padding: 20px 32px;
-      background: #0a0f1a;
-    }
-
-    .header h1 {
-      margin: 0 0 8px 0;
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    .header p {
-      margin: 0;
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    .api-setup {
-      background: #1e293b;
-      border-bottom: 1px solid #334155;
-      padding: 16px 32px;
-    }
-
-    .api-setup-content {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .api-setup input {
-      flex: 1;
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-size: 13px;
-    }
-
-    .api-setup-label {
-      font-size: 12px;
-      color: #94a3b8;
-      white-space: nowrap;
-    }
-
-    .api-status {
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: #7c2d12;
-      color: #fecaca;
-    }
-
-    .api-status.ready {
-      background: #064e3b;
-      color: #a7f3d0;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      padding: 24px 32px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0 0 16px 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #cbd5e1;
-    }
-
-    .scene-box {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-
-    .scene-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .scene-title h3 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: #ff8c00;
-    }
-
-    .scene-duration {
-      font-size: 12px;
-      color: #64748b;
-    }
-
-    textarea, input[type="text"], input[type="number"], input[type="color"], select {
-      width: 100%;
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: #e2e8f0;
-      padding: 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
-    textarea {
-      min-height: 50px;
-      resize: vertical;
-      font-family: monospace;
-    }
-
-    input[type="text"], input[type="number"] {
-      font-family: monospace;
-    }
-
-    input[type="color"] {
-      width: 40px;
-      height: 40px;
-      border: none;
-      padding: 2px;
-      margin-right: 8px;
-    }
-
-    .color-input-group {
-      display: flex;
-      gap: 8px;
-    }
-
-    .button {
-      width: 100%;
-      background: #ff8c00;
-      border: none;
-      color: #fff;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .button:hover:not(:disabled) {
-      background: #e07c00;
-    }
-
-    .button:disabled {
-      background: #666;
-      cursor: wait;
-    }
-
-    .button.success {
-      background: #10b981;
-    }
-
-    .button.error {
-      background: #dc2626;
-    }
-
-    .box {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .error-message {
-      background: #7c2d12;
-      border: 1px solid #ea580c;
-      color: #fecaca;
-      padding: 12px;
-      border-radius: 4px;
-      font-size: 13px;
-      margin-top: 12px;
-    }
-
-    .success-message {
-      background: #064e3b;
-      border: 1px solid #10b981;
-      color: #a7f3d0;
-      padding: 12px;
-      border-radius: 4px;
-      font-size: 13px;
-      margin-top: 12px;
-    }
-
-    .output-variant {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0f172a;
-      border: 1px solid #334155;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-
-    .variant-info h4 {
-      font-size: 13px;
-      font-weight: 500;
-      color: #e2e8f0;
-      margin: 0 0 4px 0;
-    }
-
-    .variant-info p {
-      font-size: 11px;
-      color: #64748b;
-      margin: 0;
-    }
-
-    .variant-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .small-button {
-      background: #334155;
-      border: none;
-      color: #94a3b8;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .small-button.download {
-      background: #ff8c00;
-      color: #fff;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .left-panel {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .right-panel {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .scenes-container {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
-      max-height: 600px;
-      overflow-y: auto;
-      padding-right: 8px;
-    }
-
-    .settings-group {
-      margin-bottom: 10px;
-    }
-
-    .settings-group label {
-      font-size: 12px;
-      color: #94a3b8;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: #ff8c00;
-    }
-
-    .output-section {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 16px;
-    }
-
-    .output-section h3 {
-      font-size: 13px;
-      font-weight: 600;
-      margin: 0 0 12px 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #10b981;
-    }
-
-    @media (max-width: 1024px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-      .api-setup-content {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .api-setup input {
-        width: 100%;
-      }
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .header { border-bottom: 1px solid #1e293b; padding: 20px 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 28px; font-weight: 700; }
+    .header p { margin: 0; font-size: 14px; color: #94a3b8; }
+    .container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+    .section-title { font-size: 16px; font-weight: 600; margin: 0 0 16px 0; text-transform: uppercase; color: #cbd5e1; }
+    .scene-box { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .scene-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .scene-title h3 { margin: 0; font-size: 14px; font-weight: 600; color: #ff8c00; }
+    textarea, input, select { width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 8px; border-radius: 4px; font-size: 12px; margin-bottom: 8px; font-family: monospace; }
+    textarea { min-height: 50px; }
+    input[type="color"] { width: 40px; height: 40px; padding: 2px; margin-right: 8px; }
+    .color-group { display: flex; gap: 8px; }
+    .button { width: 100%; background: #ff8c00; border: none; color: #fff; padding: 12px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .button:disabled { background: #666; cursor: wait; }
+    .button.success { background: #10b981; }
+    .box { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .error { background: #7c2d12; border: 1px solid #ea580c; color: #fecaca; padding: 12px; border-radius: 4px; font-size: 13px; margin-top: 12px; display: none; }
+    .output-variant { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+    .small-btn { background: #334155; border: none; color: #94a3b8; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    .small-btn.download { background: #ff8c00; color: #fff; }
+    .hidden { display: none; }
+    input[type="range"] { accent-color: #ff8c00; }
+    @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -337,66 +39,50 @@
     <p>Transform storyline into Motion videos</p>
   </div>
 
-  <div class="api-setup">
-    <div class="api-setup-content">
-      <label class="api-setup-label">Anthropic API Key:</label>
-      <input type="password" id="apiKey" placeholder="sk-ant-..." />
-      <span id="apiStatus" class="api-status">Not configured</span>
-    </div>
-  </div>
-
   <div class="container">
-    <div class="left-panel">
+    <div>
       <h2 class="section-title">Scene Composition</h2>
-      <div id="scenes-container" class="scenes-container"></div>
-
+      <div id="scenes"></div>
       <div class="box">
         <h3 class="section-title">Voice Settings</h3>
-        <div class="settings-group">
-          <label>Voice Type</label>
-          <select id="voiceType">
-            <option>professional-male</option>
-            <option>professional-female</option>
-            <option>narrator</option>
-          </select>
-        </div>
-        <div class="settings-group">
-          <label>Speed: <span id="speedValue">1.0</span>x</label>
-          <input type="range" id="voiceSpeed" min="0.8" max="1.3" step="0.1" value="1.0">
-        </div>
+        <label>Voice Type</label>
+        <select id="voiceType">
+          <option>professional-male</option>
+          <option>professional-female</option>
+          <option>narrator</option>
+        </select>
+        <label>Speed: <span id="speedVal">1.0</span>x</label>
+        <input type="range" id="voiceSpeed" min="0.8" max="1.3" step="0.1" value="1.0">
       </div>
     </div>
 
-    <div class="right-panel">
+    <div>
       <h2 class="section-title">Generation</h2>
-
       <div class="box">
         <h3 class="section-title">Brand Settings</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
           <div>
             <label>Primary</label>
-            <div class="color-input-group">
-              <input type="color" id="primaryColor" value="#1e3a5f">
-              <input type="text" id="primaryColorText" value="#1e3a5f" style="flex: 1;">
+            <div class="color-group">
+              <input type="color" id="primary" value="#1e3a5f">
+              <input type="text" id="primaryTxt" value="#1e3a5f" style="flex: 1;">
             </div>
           </div>
           <div>
             <label>Accent</label>
-            <div class="color-input-group">
-              <input type="color" id="accentColor" value="#ff8c00">
-              <input type="text" id="accentColorText" value="#ff8c00" style="flex: 1;">
+            <div class="color-group">
+              <input type="color" id="accent" value="#ff8c00">
+              <input type="text" id="accentTxt" value="#ff8c00" style="flex: 1;">
             </div>
           </div>
         </div>
-
-        <button class="button" id="generateBtn" onclick="generateVideo()">Generate Videos</button>
-        <div id="errorMsg" class="error-message hidden"></div>
-        <div id="successMsg" class="success-message hidden"></div>
+        <button class="button" id="btn" onclick="generate()">Generate Videos</button>
+        <div id="err" class="error"></div>
       </div>
 
-      <div id="outputSection" class="output-section hidden">
-        <h3>Output Variants</h3>
-        <div id="outputContainer"></div>
+      <div id="output" class="box hidden">
+        <h3 class="section-title">Output Variants</h3>
+        <div id="variants"></div>
       </div>
     </div>
   </div>
@@ -405,174 +91,117 @@
     const scenes = [
       { id: 1, title: 'Problem', duration: 60, narration: 'Philippine shipping is broken. Govt ports are congested, expensive, and slow.', visuals: 'Problem montage: crowded port, waiting ships, cost charts' },
       { id: 2, title: 'Cost Impact', duration: 30, narration: '30-40% more expensive than global standards. 135-260B annual inefficiency.', visuals: 'Cost comparison animation, market size metric' },
-      { id: 3, title: 'Opportunity', duration: 30, narration: 'What if logistics could work differently?', visuals: 'Question mark transition, network reveal teaser' },
-      { id: 4, title: 'Network Solution', duration: 45, narration: 'CSP deep-water hub. Starlite and ALD operator networks. 120M consumer reach in 2 hours.', visuals: 'Map animation, route highlighting, Starlite and ALD routes' },
-      { id: 5, title: 'Live Proof', duration: 45, narration: 'Real-time dashboard. Vessel tracking. Hub operations. Actual shipments moving now.', visuals: 'Dashboard embed, vessel positions, metrics' },
-      { id: 6, title: 'Structural Advantage', duration: 45, narration: '70k-ton capacity. 4.7x more cargo per voyage. 7.5x faster routing. 29% cheaper per ton.', visuals: 'Comparison cards, capacity visualization, cost breakdown' },
-      { id: 7, title: 'Shipper Wins', duration: 30, narration: 'Lazada. Unilever. ADM. Pepsi. All saving millions. Repeat rates 95%+.', visuals: 'Shipper logos, savings metrics, testimonials' },
-      { id: 8, title: 'Call to Action', duration: 30, narration: 'Join the network. Move cargo smarter. Contact us.', visuals: 'Brand moment, contact info, link' }
+      { id: 3, title: 'Opportunity', duration: 30, narration: 'What if logistics could work differently?', visuals: 'Question mark transition, network reveal' },
+      { id: 4, title: 'Network Solution', duration: 45, narration: 'CSP deep-water hub. Starlite and ALD networks. 120M reach in 2 hours.', visuals: 'Map animation, route highlighting' },
+      { id: 5, title: 'Live Proof', duration: 45, narration: 'Real-time dashboard. Vessel tracking. Hub operations.', visuals: 'Dashboard, vessel positions, metrics' },
+      { id: 6, title: 'Structural Advantage', duration: 45, narration: '70k-ton capacity. 4.7x cargo. 7.5x faster. 29% cheaper.', visuals: 'Comparison cards, capacity viz' },
+      { id: 7, title: 'Shipper Wins', duration: 30, narration: 'Lazada. Unilever. ADM. Pepsi. Saving millions. 95%+ repeat.', visuals: 'Logos, savings, testimonials' },
+      { id: 8, title: 'CTA', duration: 30, narration: 'Join the network. Move cargo smarter.', visuals: 'Brand, contact info' }
     ];
 
-    let generationInProgress = false;
-    let outputLinks = {};
+    let videos = {};
 
-    function renderScenes() {
-      const container = document.getElementById('scenes-container');
-      container.innerHTML = scenes.map(scene => `
+    function render() {
+      document.getElementById('scenes').innerHTML = scenes.map(s => `
         <div class="scene-box">
-          <div class="scene-title">
-            <h3>Scene ${scene.id}: ${scene.title}</h3>
-            <span class="scene-duration">${scene.duration}s</span>
-          </div>
-          <textarea placeholder="Narration..." id="narration-${scene.id}">${scene.narration}</textarea>
-          <input type="text" placeholder="Visual specs..." id="visuals-${scene.id}" value="${scene.visuals}">
+          <div class="scene-title"><h3>Scene ${s.id}: ${s.title}</h3><span>${s.duration}s</span></div>
+          <textarea id="n${s.id}">${s.narration}</textarea>
+          <input type="text" id="v${s.id}" value="${s.visuals}">
           <div style="display: flex; gap: 8px; align-items: center;">
-            <input type="number" id="duration-${scene.id}" value="${scene.duration}" min="10" max="120" style="width: 60px;">
+            <input type="number" id="d${s.id}" value="${s.duration}" min="10" max="120" style="width: 60px;">
             <span style="font-size: 11px; color: #64748b;">seconds</span>
           </div>
         </div>
       `).join('');
     }
 
-    function updateColorSync() {
-      document.getElementById('primaryColorText').value = document.getElementById('primaryColor').value;
-      document.getElementById('accentColorText').value = document.getElementById('accentColor').value;
-    }
-
-    function updateApiStatus() {
-      const apiKey = document.getElementById('apiKey').value.trim();
-      const status = document.getElementById('apiStatus');
-      if (apiKey.length > 10) {
-        status.textContent = 'Ready';
-        status.classList.add('ready');
-      } else {
-        status.textContent = 'Not configured';
-        status.classList.remove('ready');
-      }
-    }
-
-    document.getElementById('apiKey').addEventListener('change', updateApiStatus);
-    document.getElementById('apiKey').addEventListener('input', updateApiStatus);
-    document.getElementById('primaryColor').addEventListener('change', updateColorSync);
-    document.getElementById('accentColor').addEventListener('change', updateColorSync);
-    document.getElementById('primaryColorText').addEventListener('change', (e) => {
-      document.getElementById('primaryColor').value = e.target.value;
-    });
-    document.getElementById('accentColorText').addEventListener('change', (e) => {
-      document.getElementById('accentColor').value = e.target.value;
-    });
-    document.getElementById('voiceSpeed').addEventListener('change', (e) => {
-      document.getElementById('speedValue').textContent = parseFloat(e.target.value).toFixed(1);
+    document.getElementById('voiceSpeed').addEventListener('change', e => {
+      document.getElementById('speedVal').textContent = parseFloat(e.target.value).toFixed(1);
     });
 
-    async function generateVideo() {
-      const apiKey = document.getElementById('apiKey').value.trim();
-      if (!apiKey || apiKey.length < 10) {
-        document.getElementById('errorMsg').textContent = 'Please enter your Anthropic API key first';
-        document.getElementById('errorMsg').classList.remove('hidden');
-        return;
-      }
+    document.getElementById('primary').addEventListener('change', e => {
+      document.getElementById('primaryTxt').value = e.target.value;
+    });
+    document.getElementById('accent').addEventListener('change', e => {
+      document.getElementById('accentTxt').value = e.target.value;
+    });
 
-      if (generationInProgress) return;
-      generationInProgress = true;
+    async function generate() {
+      const btn = document.getElementById('btn');
+      const err = document.getElementById('err');
+      const output = document.getElementById('output');
 
-      const btn = document.getElementById('generateBtn');
-      const errorMsg = document.getElementById('errorMsg');
-      const successMsg = document.getElementById('successMsg');
-
-      btn.textContent = 'Generating...';
       btn.disabled = true;
-      errorMsg.classList.add('hidden');
-      successMsg.classList.add('hidden');
+      btn.textContent = 'Generating...';
+      err.style.display = 'none';
 
       try {
-        const videoScript = scenes.map(s => {
-          const narration = document.getElementById('narration-' + s.id).value;
-          return '[' + s.title + '] ' + narration;
-        }).join('\n');
-        
-        const voiceType = document.getElementById('voiceType').value;
-        const voiceSpeed = document.getElementById('voiceSpeed').value;
-        const primaryColor = document.getElementById('primaryColor').value;
-        const accentColor = document.getElementById('accentColor').value;
-
-        const prompt = 'You are a video production orchestrator. Generate JSON for 4 video variants from this script:\n\n' + videoScript + '\n\nRequirements: voice=' + voiceType + ', speed=' + voiceSpeed + 'x, primary=' + primaryColor + ', accent=' + accentColor + '\n\nReturn only valid JSON with keys: full, teaser60, email90, social30 (each with duration).';
+        const script = scenes.map(s => `[${s.title}] ${document.getElementById('n' + s.id).value}`).join('\n');
+        const voice = document.getElementById('voiceType').value;
+        const speed = document.getElementById('voiceSpeed').value;
+        const primary = document.getElementById('primary').value;
+        const accent = document.getElementById('accent').value;
 
         const payload = {
-          model: "claude-sonnet-4-6",
+          model: 'claude-sonnet-4-6',
           max_tokens: 1000,
-          messages: [
-            {
-              role: "user",
-              content: prompt
-            }
-          ]
+          messages: [{
+            role: 'user',
+            content: `Generate JSON for 4 video variants from this script:\n\n${script}\n\nVoice: ${voice}, speed: ${speed}x, colors: ${primary} / ${accent}\n\nReturn only JSON with keys: full, teaser60, email90, social30 (each with duration in seconds).`
+          }]
         };
 
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey
-          },
-          body: JSON.stringify(payload)
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payload })
         });
 
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error?.message || 'API error: ' + response.status);
-        }
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
 
-        const data = await response.json();
-        const textContent = data.content.find(c => c.type === 'text')?.text || '';
-        const cleanedText = textContent.replace(/```json\n?|\n?```/g, '').trim();
-        const videoConfig = JSON.parse(cleanedText);
+        const data = await res.json();
+        const text = data.content.find(c => c.type === 'text')?.text || '';
+        const clean = text.replace(/```json\n?|\n?```/g, '').trim();
+        const config = JSON.parse(clean);
 
-        outputLinks = {};
-        for (const [key] of Object.entries(videoConfig.videos)) {
-          outputLinks[key] = 'https://motion.dev/videos/' + key + '-' + Date.now() + '.mp4';
-        }
+        videos = {};
+        Object.keys(config.videos).forEach(key => {
+          videos[key] = `https://motion.dev/videos/${key}-${Date.now()}.mp4`;
+        });
 
-        showOutputVariants();
+        document.getElementById('variants').innerHTML = [
+          { key: 'full', label: 'Full (3:45)', desc: 'YouTube' },
+          { key: 'teaser60', label: 'Teaser (60s)', desc: 'LinkedIn' },
+          { key: 'email90', label: 'Email (90s)', desc: 'Campaigns' },
+          { key: 'social30', label: 'Social (30s)', desc: 'TikTok/Reels' }
+        ].map(v => `
+          <div class="output-variant">
+            <div><h4>${v.label}</h4><p>${v.desc}</p></div>
+            <div style="display: flex; gap: 8px;">
+              <button class="small-btn" onclick="copy('${v.key}')">Copy</button>
+              <a href="${videos[v.key]}" target="_blank" class="small-btn download">Download</a>
+            </div>
+          </div>
+        `).join('');
+
+        output.classList.remove('hidden');
         btn.textContent = 'Generated!';
         btn.classList.add('success');
-        successMsg.textContent = 'Videos generated successfully!';
-        successMsg.classList.remove('hidden');
 
-      } catch (err) {
-        errorMsg.textContent = 'Error: ' + (err.message || 'Generation failed');
-        errorMsg.classList.remove('hidden');
+      } catch (e) {
+        err.textContent = 'Error: ' + e.message;
+        err.style.display = 'block';
         btn.textContent = 'Failed';
-        btn.classList.add('error');
       } finally {
         btn.disabled = false;
-        generationInProgress = false;
       }
     }
 
-    function showOutputVariants() {
-      const variants = [
-        { key: 'full', label: 'Full (3:45)', desc: 'YouTube' },
-        { key: 'teaser60', label: 'Teaser (60s)', desc: 'LinkedIn' },
-        { key: 'email90', label: 'Email (90s)', desc: 'Campaigns' },
-        { key: 'social30', label: 'Social (30s)', desc: 'TikTok/Reels' }
-      ];
-
-      const container = document.getElementById('outputContainer');
-      container.innerHTML = variants.map(v => {
-        return '<div class="output-variant"><div class="variant-info"><h4>' + v.label + '</h4><p>' + v.desc + '</p></div><div class="variant-buttons"><button class="small-button" onclick="copyLink(\'' + v.key + '\')">Copy</button><a href="' + outputLinks[v.key] + '" target="_blank" class="small-button download">Download</a></div></div>';
-      }).join('');
-
-      document.getElementById('outputSection').classList.remove('hidden');
+    function copy(key) {
+      navigator.clipboard.writeText(videos[key]).then(() => alert('Copied!'));
     }
 
-    function copyLink(key) {
-      navigator.clipboard.writeText(outputLinks[key]).then(() => {
-        alert('Link copied!');
-      });
-    }
-
-    renderScenes();
+    render();
   </script>
 </body>
 </html>
